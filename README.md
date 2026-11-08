@@ -91,3 +91,19 @@ All personal details, skills, project specs, and links are cleanly separated in:
 
 To modify or add projects, simply update the JSON array in that file.
 
+---
+
+## 🤖 Autonomous Execution & Automated Git Workflow Guidelines
+
+To ensure seamless continuous development and granular version control:
+
+1. **Autonomous End-to-End Execution**:
+   - Once a task or development instruction is started, execute all steps autonomously until completion without pausing to ask for permission ("allow") for routine operations.
+   - Complete file creation, code modifications, testing, and validation end-to-end.
+
+2. **Automated Incremental Git Pushing**:
+   - **No Giant Batches**: Do not accumulate changes and push everything all at once at the end.
+   - **Atomic Feature Commits**: After creating or modifying files for a specific feature, immediately stage, commit, and push those changes to the remote repository.
+   - **Incremental Corrections**: If any bug fix, styling refinement, or correction is made afterward, immediately commit and push that correction as a separate incremental commit.
+   - **Remote Branch**: Maintain continuous synchronization with the configured remote repository (`origin Main:main` / `origin Main`).
+
