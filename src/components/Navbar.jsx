@@ -152,3 +152,4 @@ export const Navbar = ({ darkMode, toggleDarkMode, onOpenResume }) => {
     </header>
   );
 };
+

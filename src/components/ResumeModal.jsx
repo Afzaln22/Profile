@@ -174,3 +174,4 @@ export const ResumeModal = ({ isOpen, onClose }) => {
     </div>
   );
 };
+

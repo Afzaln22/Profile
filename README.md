@@ -90,3 +90,4 @@ All personal details, skills, project specs, and links are cleanly separated in:
 `src/data/portfolioData.js`
 
 To modify or add projects, simply update the JSON array in that file.
+
