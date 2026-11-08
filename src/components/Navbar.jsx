@@ -1,155 +1,150 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Sun, Moon, FileText, ArrowUpRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sun, Moon, Menu, X, FileText } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 
 export const Navbar = ({ darkMode, toggleDarkMode, onOpenResume }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-
-      const sections = portfolioData.navigation.map((n) => n.href.substring(1));
-      const scrollPosition = window.scrollY + 120;
-
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sections[i]);
-        if (el && el.offsetTop <= scrollPosition) {
-          setActiveSection(sections[i]);
-          break;
-        }
-      }
+      setScrolled(window.scrollY > 50);
     };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const scrollTo = (href) => {
+    setIsOpen(false);
+    const el = document.querySelector(href);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <header
+    <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-md border-b border-gray-200/80 dark:border-gray-800/80 py-3'
-          : 'bg-transparent py-5'
+          ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-md py-4'
+          : 'bg-transparent py-6'
       }`}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
-        {/* Logo */}
-        <a
+        {/* Logo matching reference */}
+        <motion.a
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           href="#home"
-          className="group flex items-center space-x-2 text-2xl font-bold font-display"
+          onClick={(e) => {
+            e.preventDefault();
+            scrollTo('#home');
+          }}
+          className="text-2xl font-bold font-display gradient-text-primary"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary-600 to-cyanAccent-brand flex items-center justify-center text-white font-black shadow-lg shadow-primary-500/25 group-hover:scale-105 transition-transform duration-200">
-            AN
-          </div>
-          <span className="text-gray-900 dark:text-white tracking-tight">
-            Afzal <span className="gradient-text-primary">N</span>
-          </span>
-        </a>
+          Afzal N
+        </motion.a>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center space-x-1">
-          {portfolioData.navigation.map((item) => {
-            const isActive = activeSection === item.href.substring(1);
-            return (
-              <a
-                key={item.name}
-                href={item.href}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  isActive
-                    ? 'text-primary-600 dark:text-cyanAccent-brand bg-primary-50 dark:bg-gray-800/80 font-semibold'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-cyanAccent-brand hover:bg-gray-100/70 dark:hover:bg-gray-800/50'
-                }`}
-              >
-                {item.name}
-              </a>
-            );
-          })}
-        </nav>
-
-        {/* Actions: Theme Toggle & Resume CTA */}
-        <div className="hidden sm:flex items-center space-x-3">
-          <button
-            onClick={toggleDarkMode}
-            aria-label="Toggle theme"
-            className="p-2.5 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700/80 transition-colors duration-200"
-          >
-            {darkMode ? (
-              <Sun className="w-5 h-5 text-amber-400 hover:rotate-45 transition-transform duration-300" />
-            ) : (
-              <Moon className="w-5 h-5 text-primary-600 hover:-rotate-12 transition-transform duration-300" />
-            )}
-          </button>
-
-          <button
-            onClick={onOpenResume}
-            className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-primary-600 to-cyanAccent-500 hover:from-primary-700 hover:to-cyanAccent-brand text-white font-medium text-sm shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/30 transition-all duration-200 active:scale-95"
-          >
-            <FileText className="w-4 h-4" />
-            <span>Resume</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </button>
+        {/* Desktop Navigation Links */}
+        <div className="hidden md:flex items-center space-x-8">
+          {portfolioData.navigation.map((item) => (
+            <motion.button
+              key={item.name}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => scrollTo(item.href)}
+              className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 font-medium text-sm lg:text-base"
+            >
+              {item.name}
+            </motion.button>
+          ))}
         </div>
 
-        {/* Mobile controls */}
-        <div className="flex sm:hidden items-center space-x-2">
-          <button
+        {/* Desktop Theme Toggle & Resume */}
+        <div className="hidden md:flex items-center space-x-4">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={toggleDarkMode}
-            aria-label="Toggle theme"
-            className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700"
+            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
+            aria-label="Toggle Dark Mode"
           >
-            {darkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-primary-600" />}
-          </button>
+            {darkMode ? <Sun size={20} className="text-yellow-500" /> : <Moon size={20} className="text-primary-600" />}
+          </motion.button>
 
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="Toggle menu"
-            className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700"
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={onOpenResume}
+            className="px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-medium text-sm flex items-center space-x-1.5 shadow-md"
           >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+            <FileText size={16} />
+            <span>Resume</span>
+          </motion.button>
+        </div>
+
+        {/* Mobile Buttons */}
+        <div className="md:hidden flex items-center space-x-2">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={toggleDarkMode}
+            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+            aria-label="Toggle Theme"
+          >
+            {darkMode ? <Sun size={20} className="text-yellow-500" /> : <Moon size={20} className="text-primary-600" />}
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+            aria-label="Menu"
+          >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </motion.button>
         </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
-      {isOpen && (
-        <div className="lg:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800 shadow-2xl px-6 py-6 transition-all animate-fadeIn">
-          <div className="flex flex-col space-y-2">
-            {portfolioData.navigation.map((item) => {
-              const isActive = activeSection === item.href.substring(1);
-              return (
-                <a
+      {/* Mobile Dropdown Menu with Framer Motion */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden overflow-hidden absolute top-full left-0 right-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg border-t border-gray-200 dark:border-gray-700"
+          >
+            <div className="py-4 space-y-2 px-6">
+              {portfolioData.navigation.map((item) => (
+                <motion.button
                   key={item.name}
-                  href={item.href}
-                  onClick={() => setIsOpen(false)}
-                  className={`px-4 py-3 rounded-xl text-base font-medium transition-all ${
-                    isActive
-                      ? 'text-primary-600 dark:text-cyanAccent-brand bg-primary-50 dark:bg-gray-800 font-semibold'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                  }`}
+                  whileHover={{ x: 10 }}
+                  onClick={() => scrollTo(item.href)}
+                  className="block w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all duration-200 font-medium"
                 >
                   {item.name}
-                </a>
-              );
-            })}
-            <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  onOpenResume();
-                }}
-                className="w-full flex items-center justify-center space-x-2 px-5 py-3 rounded-xl bg-gradient-to-r from-primary-600 to-cyanAccent-500 text-white font-medium text-sm shadow-md"
-              >
-                <FileText className="w-4 h-4" />
-                <span>View Full Resume</span>
-              </button>
+                </motion.button>
+              ))}
+              <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
+                    onOpenResume();
+                  }}
+                  className="w-full py-2.5 bg-primary-600 text-white rounded-lg font-medium text-sm flex items-center justify-center space-x-2"
+                >
+                  <FileText size={16} />
+                  <span>View Full Resume</span>
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
-    </header>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
   );
 };
-

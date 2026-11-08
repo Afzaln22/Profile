@@ -12,70 +12,96 @@
   }
 }
 
-/* Custom Gradients matching the reference */
-.gradient-text {
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #00f5d4 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
+/* Identical Gradients from reference */
 .gradient-text-primary {
-  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #06b6d4 100%);
+  -webkit-text-fill-color: #0000;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
   -webkit-background-clip: text;
   background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
-.gradient-text-cyan {
-  background: linear-gradient(135deg, #00f5d4 0%, #3b82f6 100%);
+.gradient-text {
+  -webkit-text-fill-color: #0000;
+  background: linear-gradient(135deg, #667eea, #764ba2);
   -webkit-background-clip: text;
   background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
-.gradient-border {
-  position: relative;
-  background: linear-gradient(60deg, #3b82f6, #00f5d4, #8b5cf6);
-  padding: 2px;
-  border-radius: 1rem;
-}
-
-/* Section Padding */
+/* Section Padding matching reference */
 .section-padding {
-  @apply py-20 lg:py-28;
+  padding: 80px 0;
 }
 
-/* Custom Glassmorphism */
+/* Hover-Lift matching reference exactly */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.dark .hover-lift:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Timeline central line & dots */
+.timeline-dot {
+  left: 50%;
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+/* Glassmorphism */
 .glass {
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 
 .dark .glass {
-  background: rgba(17, 24, 39, 0.75);
+  background: rgba(17, 24, 39, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 
-/* Modern Card Hover Effects */
-.card-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* Keyframe animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
-.card-hover:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 30px -10px rgba(59, 130, 246, 0.15);
+.float {
+  animation: float 6s ease-in-out infinite;
 }
 
-.dark .card-hover:hover {
-  box-shadow: 0 20px 30px -10px rgba(0, 245, 212, 0.1);
+@keyframes typing {
+  0% {
+    width: 0;
+  }
+}
+
+@keyframes blink-caret {
+  0%, 100% {
+    border-color: transparent;
+  }
+}
+
+.typewriter {
+  animation: typing 3.5s steps(40), blink-caret 0.75s step-end infinite;
+  border-right: 2px solid;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 9px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -88,7 +114,7 @@
 
 ::-webkit-scrollbar-thumb {
   background: #94a3b8;
-  border-radius: 5px;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -100,6 +126,5 @@
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #00f5d4;
+  background: #3b82f6;
 }
-
