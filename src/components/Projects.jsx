@@ -1,212 +1,239 @@
-import React, { useState } from 'react';
-import {
-  Github,
-  ExternalLink,
-  Sparkles,
-  CheckCircle2,
-  Layers,
-  Activity,
-  Code2,
-  X
-} from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { Github, ExternalLink, Calendar, CheckCircle, Filter, X, Code2 } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 
 export const Projects = () => {
   const { projects } = portfolioData;
-  const [activeFilter, setActiveFilter] = useState('All');
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, threshold: 0.1 });
+
+  const [activeFilter, setActiveFilter] = useState('all');
   const [selectedProject, setSelectedProject] = useState(null);
 
-  const filters = ['All', 'AI & ML', 'Full Stack', 'Frontend'];
+  const filterTabs = [
+    { key: 'all', label: 'All', count: projects.length },
+    { key: 'ai', label: 'AI & ML', count: projects.filter(p => p.category.includes('AI') || p.category.includes('ML')).length },
+    { key: 'fullstack', label: 'Full Stack', count: projects.filter(p => p.category.includes('Full Stack') || p.category.includes('Frontend')).length },
+    { key: 'backend', label: 'Backend', count: projects.filter(p => p.category.includes('Backend') || p.category.includes('AI')).length }
+  ];
 
-  const filteredProjects =
-    activeFilter === 'All'
-      ? projects
-      : projects.filter((p) => p.category === activeFilter);
+  const filteredProjects = projects.filter(p => {
+    if (activeFilter === 'all') return true;
+    if (activeFilter === 'ai') return p.category.includes('AI') || p.category.includes('ML');
+    if (activeFilter === 'fullstack') return p.category.includes('Full Stack') || p.category.includes('Frontend');
+    if (activeFilter === 'backend') return p.category.includes('Backend') || p.category.includes('AI');
+    return true;
+  });
+
+  const getWatermarkIcon = (category) => {
+    if (category.includes('AI') || category.includes('ML')) return '🤖';
+    if (category.includes('Full Stack') || category.includes('Frontend')) return '💻';
+    return '⚙️';
+  };
 
   return (
-    <section id="projects" className="section-padding bg-gray-50/70 dark:bg-gray-900/40 relative">
+    <section id="projects" className="section-padding bg-gray-50 dark:bg-gray-800/50">
       <div className="container mx-auto px-6">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-primary-100/70 dark:bg-primary-950/70 border border-primary-200 dark:border-primary-800 text-primary-700 dark:text-cyanAccent-brand text-xs font-semibold uppercase tracking-wider mb-3">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Engineering Showcase</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-display text-gray-900 dark:text-white mb-4">
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, y: 50 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold font-display mb-6 text-gray-900 dark:text-white">
             Featured <span className="gradient-text-primary">Projects</span>
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg leading-relaxed">
-            Production-grade systems, agentic AI workflows, and full-stack software built with performance and verification in mind.
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            Showcasing impactful solutions across AI/ML, full-stack development, and backend systems
           </p>
+        </motion.div>
 
-          {/* Category Filter Tabs */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mt-8">
-            {filters.map((filter) => (
-              <button
-                key={filter}
-                onClick={() => setActiveFilter(filter)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 ${
-                  activeFilter === filter
-                    ? 'bg-gradient-to-r from-primary-600 to-cyanAccent-500 text-white shadow-md shadow-primary-500/25 scale-105'
-                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
-                }`}
-              >
-                {filter}
-              </button>
-            ))}
+        {/* Filter Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="flex flex-wrap justify-center items-center gap-4 mb-12"
+        >
+          <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 mr-2 sm:mr-4">
+            <Filter size={20} />
+            <span className="font-medium text-sm sm:text-base">Filter by:</span>
           </div>
-        </div>
+
+          {filterTabs.map((tab) => (
+            <motion.button
+              key={tab.key}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setActiveFilter(tab.key)}
+              className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 ${
+                activeFilter === tab.key
+                  ? 'bg-primary-600 text-white shadow-lg'
+                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-md'
+              }`}
+            >
+              {tab.label} ({tab.count})
+            </motion.button>
+          ))}
+        </motion.div>
 
         {/* Projects Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project) => (
-            <div
-              key={project.id}
-              className="bg-white dark:bg-gray-800/80 rounded-2xl border border-gray-200/80 dark:border-gray-700 overflow-hidden shadow-sm card-hover flex flex-col justify-between group"
-            >
-              <div>
-                {/* Visual Banner Header */}
-                <div
-                  className={`h-40 bg-gradient-to-br ${project.gradient} p-6 relative flex flex-col justify-between overflow-hidden text-white`}
-                >
-                  {/* Subtle background circuit or grid lines */}
-                  <div className="absolute inset-0 bg-black/15 pointer-events-none" />
-                  <div className="relative z-10 flex items-center justify-between">
-                    <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-white/20 backdrop-blur-md border border-white/30 text-white shadow-sm">
-                      {project.badge}
-                    </span>
-                    <span className="text-xs font-mono bg-black/30 backdrop-blur-md px-2.5 py-1 rounded-md text-white/90">
-                      {project.category}
-                    </span>
-                  </div>
-
-                  <div className="relative z-10">
-                    <h3 className="text-xl font-bold font-display leading-tight text-white drop-shadow-sm">
-                      {project.title.split(' - ')[0]}
-                    </h3>
-                    <p className="text-xs text-white/80 font-mono mt-0.5">
-                      {project.title.split(' - ')[1] || ''}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Content Body */}
-                <div className="p-6 space-y-4">
-                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-3">
-                    {project.shortDescription}
-                  </p>
-
-                  {/* Highlights Bullet List */}
-                  <div className="space-y-1.5 pt-1">
-                    {project.highlights.slice(0, 3).map((hl, i) => (
-                      <div key={i} className="flex items-start space-x-2 text-xs text-gray-600 dark:text-gray-300">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-primary-500 dark:text-cyanAccent-brand flex-shrink-0 mt-0.5" />
-                        <span className="line-clamp-1">{hl}</span>
+        <motion.div layout className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <AnimatePresence>
+            {filteredProjects.map((project, idx) => (
+              <motion.div
+                layout
+                key={project.id}
+                initial={{ opacity: 0, y: 50 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.5, delay: 0.1 * idx }}
+                className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group hover-lift flex flex-col justify-between"
+              >
+                <div>
+                  {/* Top Banner with Watermark Icon */}
+                  <div className="relative h-48 bg-gradient-to-br from-primary-500 to-purple-600 overflow-hidden">
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-300" />
+                    
+                    {/* Watermark Icon */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-white text-6xl opacity-40 select-none">
+                        {getWatermarkIcon(project.category)}
                       </div>
-                    ))}
+                    </div>
+
+                    {/* Status Badge */}
+                    <div className="absolute top-4 left-4">
+                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 dark:bg-green-900/60 text-green-800 dark:text-green-200 shadow-sm">
+                        {project.badge || 'Completed'}
+                      </span>
+                    </div>
+
+                    {/* Top-Right GitHub Hover Overlay */}
+                    <div className="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <motion.a
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 bg-white/20 backdrop-blur-sm rounded-lg text-white hover:bg-white/30 transition-colors"
+                        title="View on GitHub"
+                      >
+                        <Github size={18} />
+                      </motion.a>
+                    </div>
                   </div>
 
-                  {/* Quick Stat Chips */}
-                  {project.stats && (
-                    <div className="pt-2 flex flex-wrap gap-1.5">
-                      {Object.entries(project.stats).map(([k, v]) => (
+                  {/* Body Content */}
+                  <div className="p-6">
+                    <div className="mb-4">
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-200">
+                        {project.title.split(' - ')[0]}
+                      </h3>
+                      <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-3 font-mono">
+                        <Calendar size={14} className="mr-1.5 text-primary-500" />
+                        <span>{project.stats?.architecture || project.category}</span>
+                      </div>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
+                        {project.shortDescription}
+                      </p>
+                    </div>
+
+                    {/* Highlights with Checkmark */}
+                    <div className="space-y-1.5 mb-5">
+                      {project.highlights.slice(0, 2).map((hl, i) => (
+                        <div key={i} className="flex items-start space-x-2 text-xs text-gray-600 dark:text-gray-300">
+                          <CheckCircle size={14} className="text-green-500 flex-shrink-0 mt-0.5" />
+                          <span className="line-clamp-2">{hl}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Tech Stack Pills */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.techStack.slice(0, 4).map((tech) => (
                         <span
-                          key={k}
-                          className="px-2 py-1 rounded-md bg-gray-100 dark:bg-gray-700/60 text-gray-700 dark:text-gray-300 text-[11px] font-mono"
+                          key={tech}
+                          className="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded text-xs font-medium"
                         >
-                          <strong className="text-gray-900 dark:text-white capitalize">{k}:</strong> {v}
+                          {tech}
                         </span>
                       ))}
                     </div>
-                  )}
-
-                  {/* Tech Stack Pills */}
-                  <div className="pt-2 flex flex-wrap gap-1.5 border-t border-gray-100 dark:border-gray-700/60">
-                    {project.techStack.slice(0, 5).map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-2.5 py-1 rounded-md bg-primary-50 dark:bg-primary-950/60 text-primary-700 dark:text-cyanAccent-brand text-[11px] font-medium border border-primary-100 dark:border-primary-900/40"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                    {project.techStack.length > 5 && (
-                      <span className="px-2 py-1 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-500 text-[11px]">
-                        +{project.techStack.length - 5}
-                      </span>
-                    )}
                   </div>
                 </div>
-              </div>
 
-              {/* Action Footer Buttons */}
-              <div className="p-6 pt-0 border-t border-gray-100 dark:border-gray-700/60 flex items-center justify-between gap-3">
-                <button
-                  onClick={() => setSelectedProject(project)}
-                  className="flex-1 py-2.5 px-3 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 text-xs font-semibold transition-all text-center"
-                >
-                  Deep Dive & Specs
-                </button>
+                {/* Bottom Action Footer */}
+                <div className="px-6 pb-6 pt-0 flex items-center justify-between gap-3 border-t border-gray-100 dark:border-gray-700/60 mt-2">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setSelectedProject(project)}
+                    className="flex-1 py-2.5 px-3 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 text-xs font-semibold text-center transition-colors"
+                  >
+                    Details & Architecture
+                  </motion.button>
 
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="p-2.5 rounded-xl bg-gray-900 hover:bg-black dark:bg-gray-700 dark:hover:bg-gray-600 text-white transition-all shadow-sm flex items-center justify-center"
-                  title="View on GitHub"
-                >
-                  <Github className="w-4 h-4" />
-                </a>
-              </div>
-            </div>
-          ))}
-        </div>
+                  <motion.a
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2.5 rounded-lg bg-primary-600 hover:bg-primary-700 text-white shadow transition-all flex items-center justify-center"
+                    title="GitHub Repository"
+                  >
+                    <Github size={18} />
+                  </motion.a>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
 
-        {/* GitHub Repositories Banner CTA */}
-        <div className="mt-16 bg-gradient-to-r from-gray-900 via-primary-950 to-gray-900 rounded-2xl p-8 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-gray-800">
-          <div className="space-y-2 text-center md:text-left">
-            <div className="inline-flex items-center space-x-2 text-cyanAccent-brand text-xs font-bold uppercase tracking-wider">
-              <Code2 className="w-4 h-4" />
-              <span>Open Source & GitHub Repositories</span>
-            </div>
-            <h3 className="text-2xl sm:text-3xl font-bold font-display">
-              Explore More Repositories on GitHub
-            </h3>
-            <p className="text-gray-300 text-sm max-w-xl">
-              Inspect full commit histories, automated test runs, backend pipelines, and interactive demos across all repositories.
-            </p>
-          </div>
-
-          <a
+        {/* View All on GitHub Banner */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="text-center mt-12"
+        >
+          <motion.a
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             href={portfolioData.personalInfo.githubTab}
             target="_blank"
-            rel="noreferrer"
-            className="flex-shrink-0 inline-flex items-center space-x-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-primary-500 to-cyanAccent-500 hover:from-primary-600 hover:to-cyanAccent-brand text-gray-950 font-bold text-sm shadow-lg shadow-cyanAccent-500/20 hover:shadow-cyanAccent-500/30 transition-all duration-200 active:scale-95"
+            rel="noopener noreferrer"
+            className="inline-flex items-center space-x-2 px-8 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg font-medium shadow-md hover:shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-200"
           >
-            <Github className="w-4 h-4" />
-            <span>Visit GitHub Repositories</span>
-            <ExternalLink className="w-4 h-4" />
-          </a>
-        </div>
+            <Github size={20} />
+            <span>View All Projects on GitHub</span>
+            <ExternalLink size={16} />
+          </motion.a>
+        </motion.div>
       </div>
 
-      {/* Project Deep Dive Modal */}
+      {/* Project Specs Modal */}
       {selectedProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="bg-white dark:bg-gray-900 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-200 dark:border-gray-800 p-6 sm:p-8 relative">
             <button
               onClick={() => setSelectedProject(null)}
               className="absolute top-5 right-5 p-2 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
             >
-              <X className="w-5 h-5" />
+              <X size={20} />
             </button>
 
             <div className="space-y-6">
               <div>
-                <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-primary-100 dark:bg-primary-950 text-primary-600 dark:text-cyanAccent-brand border border-primary-200 dark:border-primary-800 mb-2">
+                <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-primary-100 dark:bg-primary-950 text-primary-600 dark:text-primary-400 mb-2">
                   {selectedProject.badge} • {selectedProject.category}
                 </span>
-                <h3 className="text-2xl font-bold font-display text-gray-900 dark:text-white">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
                   {selectedProject.title}
                 </h3>
               </div>
@@ -222,38 +249,22 @@ export const Projects = () => {
                 <div className="space-y-2">
                   {selectedProject.highlights.map((hl, i) => (
                     <div key={i} className="flex items-start space-x-2 text-sm text-gray-700 dark:text-gray-300">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle size={16} className="text-green-500 flex-shrink-0 mt-0.5" />
                       <span>{hl}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {selectedProject.stats && (
-                <div className="p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                  <h4 className="text-xs font-bold uppercase text-gray-500 dark:text-gray-400 mb-2">
-                    System Telemetry & Metrics
-                  </h4>
-                  <div className="grid grid-cols-3 gap-3">
-                    {Object.entries(selectedProject.stats).map(([k, v]) => (
-                      <div key={k} className="text-center">
-                        <div className="text-xs font-medium text-gray-500 dark:text-gray-400 capitalize">{k}</div>
-                        <div className="text-sm font-bold text-gray-900 dark:text-white">{v}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
               <div>
                 <h4 className="text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-white mb-2">
-                  Complete Tech Stack
+                  Technologies
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {selectedProject.techStack.map((tech) => (
                     <span
                       key={tech}
-                      className="px-3 py-1 rounded-lg bg-primary-50 dark:bg-primary-950/80 text-primary-700 dark:text-cyanAccent-brand text-xs font-medium border border-primary-200 dark:border-primary-800"
+                      className="px-3 py-1 rounded-lg bg-primary-50 dark:bg-primary-950/80 text-primary-700 dark:text-primary-300 text-xs font-medium border border-primary-200 dark:border-primary-800"
                     >
                       {tech}
                     </span>
@@ -264,7 +275,7 @@ export const Projects = () => {
               <div className="pt-4 border-t border-gray-200 dark:border-gray-800 flex items-center justify-end space-x-3">
                 <button
                   onClick={() => setSelectedProject(null)}
-                  className="px-5 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium transition-colors"
+                  className="px-5 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium"
                 >
                   Close
                 </button>
@@ -272,11 +283,10 @@ export const Projects = () => {
                   href={selectedProject.githubUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary-600 to-cyanAccent-500 hover:from-primary-700 hover:to-cyanAccent-brand text-white font-medium text-sm shadow-md"
+                  className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-medium text-sm shadow-md"
                 >
-                  <Github className="w-4 h-4" />
+                  <Github size={16} />
                   <span>View Repository</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               </div>
             </div>
@@ -286,4 +296,3 @@ export const Projects = () => {
     </section>
   );
 };
-
