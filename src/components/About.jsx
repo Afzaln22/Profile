@@ -1,227 +1,184 @@
-import React from 'react';
-import {
-  GraduationCap,
-  Award,
-  Terminal,
-  Cpu,
-  Layers,
-  Sparkles,
-  CheckCircle,
-  Calendar,
-  MapPin
-} from 'lucide-react';
+import React, { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { GraduationCap, Award, Terminal, Cpu, Database, Cloud } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 
 export const About = () => {
   const { personalInfo, education } = portfolioData;
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, threshold: 0.1 });
 
-  const corePillars = [
+  const stats = [
+    { value: "2+", label: "Years Experience", color: "text-primary-600" },
+    { value: "5+", label: "Projects Built", color: "text-green-600" },
+    { value: "4+", label: "Certifications & Research", color: "text-purple-600" },
+    { value: "MCA", label: "Candidate (BCA Grad)", color: "text-orange-600" }
+  ];
+
+  const highlights = [
     {
-      title: "Backend & Systems",
-      icon: Terminal,
-      color: "from-blue-500 to-indigo-600",
-      description: "FastAPI, asynchronous microservices, PostgreSQL, concurrency, and clean OOP architecture."
+      title: "Backend & Systems Architecture",
+      icon: <Terminal className="w-6 h-6 text-primary-600 dark:text-primary-400" />,
+      description: "FastAPI asynchronous microservices, PostgreSQL, SQLite, and clean OOP architecture designed for low-latency execution."
     },
     {
-      title: "AI, ML & Vision",
-      icon: Cpu,
-      color: "from-cyan-500 to-blue-600",
-      description: "PyTorch, Vision Transformers (ViT), YOLO, LangGraph agentic workflows, and Grad-CAM explainability."
+      title: "AI, Vision & Explainability",
+      icon: <Cpu className="w-6 h-6 text-green-600 dark:text-green-400" />,
+      description: "PyTorch, Vision Transformers (ViT), YOLO object detection, and Grad-CAM attention heatmaps for explainable deep learning."
     },
     {
-      title: "Full-Stack & Mobile",
-      icon: Layers,
-      color: "from-purple-500 to-pink-600",
-      description: "React 19, Next.js 16, Vite, Tailwind CSS, and Flutter cross-platform applications."
+      title: "Agentic AI & LangGraph StateMachines",
+      icon: <Database className="w-6 h-6 text-purple-600 dark:text-purple-400" />,
+      description: "Multi-stage autonomous agent execution loops with strict Pydantic output guardrails preventing speculative hallucination."
+    },
+    {
+      title: "Modern Full-Stack & Testing Rigor",
+      icon: <Cloud className="w-6 h-6 text-orange-600 dark:text-orange-400" />,
+      description: "React 19, Next.js 16, Tailwind CSS, and 100% automated test verification via comprehensive Pytest test suites."
     }
   ];
 
   return (
-    <section id="about" className="section-padding bg-gray-50/70 dark:bg-gray-900/40 relative">
+    <section id="about" className="section-padding bg-gray-50 dark:bg-gray-800/50">
       <div className="container mx-auto px-6">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-primary-100/70 dark:bg-primary-950/70 border border-primary-200 dark:border-primary-800 text-primary-700 dark:text-cyanAccent-brand text-xs font-semibold uppercase tracking-wider mb-3">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Discover My Journey</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-display text-gray-900 dark:text-white mb-4">
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, y: 50 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold font-display mb-6 text-gray-900 dark:text-white">
             About <span className="gradient-text-primary">Me</span>
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg leading-relaxed">
-            Passionate software engineer building high-performance backend systems, practical AI/ML solutions, and scalable full-stack applications.
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            Passionate software engineer with a strong foundation in backend development and algorithmic problem solving
           </p>
-        </div>
+        </motion.div>
 
-        {/* Two-Column Grid: Narrative & Stats */}
-        <div className="grid lg:grid-cols-12 gap-12 items-start mb-16">
-          {/* Left Column: Narrative & Pillars (7 cols) */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="bg-white dark:bg-gray-800/80 rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-200/80 dark:border-gray-700 space-y-4">
-              <h3 className="text-xl sm:text-2xl font-bold font-display text-gray-900 dark:text-white flex items-center space-x-2">
-                <span>Architecting High-Impact Software Solutions</span>
+        {/* Two-Column Grid */}
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          {/* Left Column: My Journey & 4 Stats Cards */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <div className="mb-12">
+              <h3 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+                My Journey
               </h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
-                {personalInfo.aboutBio}
-              </p>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
-                {personalInfo.philosophy}
-              </p>
-
-              {/* Core Philosophy Chips */}
-              <div className="pt-2 flex flex-wrap gap-2">
-                <span className="px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-semibold border border-blue-200 dark:border-blue-800">
-                  ⚡ Asynchronous Concurrency
-                </span>
-                <span className="px-3 py-1.5 rounded-lg bg-cyan-50 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyanAccent-brand text-xs font-semibold border border-cyan-200 dark:border-cyan-800">
-                  🔬 Explainable AI (Grad-CAM)
-                </span>
-                <span className="px-3 py-1.5 rounded-lg bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs font-semibold border border-purple-200 dark:border-purple-800">
-                  🤖 Agentic LangGraph StateGraphs
-                </span>
-                <span className="px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs font-semibold border border-emerald-200 dark:border-emerald-800">
-                  🧪 Test-Driven Validation (Pytest)
-                </span>
-              </div>
-            </div>
-
-            {/* Core Pillars 3-grid */}
-            <div className="grid sm:grid-cols-3 gap-4">
-              {corePillars.map((pillar) => {
-                const IconComponent = pillar.icon;
-                return (
-                  <div
-                    key={pillar.title}
-                    className="bg-white dark:bg-gray-800/80 rounded-2xl p-5 border border-gray-200/80 dark:border-gray-700 shadow-sm card-hover flex flex-col justify-between"
-                  >
-                    <div>
-                      <div className={`w-10 h-10 rounded-xl bg-gradient-to-tr ${pillar.color} flex items-center justify-center text-white shadow-md mb-3`}>
-                        <IconComponent className="w-5 h-5" />
-                      </div>
-                      <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-1.5">
-                        {pillar.title}
-                      </h4>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-                        {pillar.description}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Right Column: Key Stats & Highlights (5 cols) */}
-          <div className="lg:col-span-5 space-y-6">
-            {/* Stats Grid 2x2 */}
-            <div className="grid grid-cols-2 gap-4">
-              {personalInfo.stats.map((stat, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white dark:bg-gray-800/80 rounded-2xl p-5 sm:p-6 border border-gray-200/80 dark:border-gray-700 shadow-sm card-hover text-center"
-                >
-                  <div className="text-2xl sm:text-3xl font-extrabold font-display gradient-text-primary mb-1">
-                    {stat.value}
-                  </div>
-                  <div className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Fast Fact Card */}
-            <div className="bg-gradient-to-br from-primary-600 to-indigo-700 rounded-2xl p-6 text-white shadow-lg shadow-primary-500/20 space-y-3">
-              <div className="flex items-center space-x-2 text-cyanAccent-brand text-xs font-bold uppercase tracking-wider">
-                <Award className="w-4 h-4" />
-                <span>Engineering Mindset</span>
-              </div>
-              <h4 className="text-lg font-bold font-display">
-                Building Scalable, Validated & Explainable Systems
-              </h4>
-              <p className="text-primary-100 text-xs sm:text-sm leading-relaxed">
-                Whether deploying stateful multi-agent trading copilots or engineering 3D forensic deepfake detection pipelines, I prioritize deterministic guardrails, low latency, and intuitive user experiences.
-              </p>
-              <div className="pt-1 flex items-center space-x-4 text-xs text-primary-200">
-                <span className="flex items-center space-x-1">
-                  <CheckCircle className="w-3.5 h-3.5 text-cyanAccent-brand" />
-                  <span>Clean Architecture</span>
-                </span>
-                <span className="flex items-center space-x-1">
-                  <CheckCircle className="w-3.5 h-3.5 text-cyanAccent-brand" />
-                  <span>Pytest Guardrails</span>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Education Timeline Subsection */}
-        <div className="mt-16">
-          <div className="flex items-center justify-between mb-8 pb-3 border-b border-gray-200 dark:border-gray-800">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center text-primary-600 dark:text-cyanAccent-brand">
-                <GraduationCap className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold font-display text-gray-900 dark:text-white">
-                  Academic <span className="gradient-text-primary">Background</span>
-                </h3>
-                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                  Continuous formal education in computer applications and systems engineering
+              <div className="space-y-4 text-gray-600 dark:text-gray-400 leading-relaxed text-justify">
+                <p>
+                  I am a passionate software engineer based in Mysore, Karnataka, with a primary focus on architecting high-performance backend systems, cutting-edge AI/ML solutions, and data-intensive platforms.
+                </p>
+                <p>
+                  I graduated with a Bachelor of Computer Applications (BCA) and am currently pursuing my Master of Computer Applications (MCA). Throughout my academic and professional journey, I have engineered stateful agentic AI platforms, real-time computer vision classifiers, and automated testing architectures.
+                </p>
+                <p>
+                  My engineering philosophy emphasizes clean code, deterministic output guardrails, and rigorous automated validation. Whether developing 4-stage LangGraph trading state machines with hallucination defenses or visualizing 3D forensic deepfake heatmaps, I am driven by delivering dependable, business-impacting software.
                 </p>
               </div>
             </div>
-          </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {education.map((item, idx) => (
-              <div
-                key={idx}
-                className="bg-white dark:bg-gray-800/80 rounded-2xl p-6 sm:p-7 border border-gray-200/80 dark:border-gray-700 shadow-sm card-hover relative flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-start justify-between gap-4 mb-3">
+            {/* 4 Stats Cards Grid */}
+            <div className="grid grid-cols-2 gap-6">
+              {stats.map((stat, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ duration: 0.5, delay: 0.4 + 0.1 * idx }}
+                  className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 hover-lift text-center"
+                >
+                  <div className={`text-3xl font-bold ${stat.color} mb-2`}>
+                    {stat.value}
+                  </div>
+                  <div className="text-gray-600 dark:text-gray-400 text-sm font-medium">
+                    {stat.label}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Right Column: Education & Key Highlights */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            {/* Education Subsection */}
+            <div className="mb-12">
+              <h3 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+                Education
+              </h3>
+              <div className="space-y-6">
+                {education.map((edu, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.5, delay: 0.4 + 0.1 * idx }}
+                    className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover-lift"
+                  >
+                    <div className="flex items-start space-x-4">
+                      <div className="flex-shrink-0 w-12 h-12 bg-primary-100 dark:bg-primary-900/50 rounded-lg flex items-center justify-center text-primary-600 dark:text-primary-400">
+                        <GraduationCap className="w-6 h-6" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-gray-900 dark:text-white mb-1">
+                          {edu.degree}
+                        </h4>
+                        <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
+                          {edu.institution}
+                        </p>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+                            {edu.period}
+                          </span>
+                          <span className="text-sm font-semibold text-primary-600 dark:text-primary-400">
+                            {edu.status}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Key Highlights Subsection */}
+            <div>
+              <h3 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+                Key Highlights
+              </h3>
+              <div className="grid gap-4">
+                {highlights.map((h, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.5, delay: 0.6 + 0.1 * idx }}
+                    className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-md hover:shadow-lg transition-all duration-300 hover-lift flex items-start space-x-3"
+                  >
+                    <div className="flex-shrink-0 mt-1">{h.icon}</div>
                     <div>
-                      <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-primary-50 dark:bg-primary-950/80 text-primary-600 dark:text-cyanAccent-brand border border-primary-200 dark:border-primary-800 mb-2">
-                        {item.status}
-                      </span>
-                      <h4 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
-                        {item.degree}
+                      <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-1">
+                        {h.title}
                       </h4>
-                      <p className="text-sm font-medium text-gray-600 dark:text-gray-300 flex items-center space-x-1.5 mt-1">
-                        <MapPin className="w-3.5 h-3.5 text-primary-500" />
-                        <span>{item.institution}</span>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                        {h.description}
                       </p>
                     </div>
-
-                    <div className="flex items-center space-x-1.5 px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-mono font-semibold whitespace-nowrap">
-                      <Calendar className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" />
-                      <span>{item.period}</span>
-                    </div>
-                  </div>
-
-                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-                    {item.description}
-                  </p>
-                </div>
-
-                <div className="pt-3 border-t border-gray-100 dark:border-gray-700/60 flex flex-wrap gap-1.5">
-                  {item.highlights.map((h, i) => (
-                    <span
-                      key={i}
-                      className="px-2.5 py-1 rounded-md bg-gray-50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 text-[11px] font-medium"
-                    >
-                      {h}
-                    </span>
-                  ))}
-                </div>
+                  </motion.div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
   );
 };
-
