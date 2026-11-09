@@ -37,8 +37,10 @@ export const Experience = () => {
           <div className="space-y-12">
             {experiences.map((exp, idx) => {
               const isEven = idx % 2 === 0;
+              const techList = exp.tags || exp.technologies || [];
+              const responsibilitiesList = exp.responsibilities || [];
               return (
-                <div key={exp.id} className="relative flex flex-col md:flex-row items-center">
+                <div key={exp.id || `exp_${idx}`} className="relative flex flex-col md:flex-row items-center">
                   {/* Timeline Center Node */}
                   <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-primary-600 rounded-full border-4 border-white dark:border-gray-900 shadow-lg z-10" />
 
@@ -68,15 +70,19 @@ export const Experience = () => {
                       </h3>
 
                       <div className="flex items-center text-sm font-semibold text-primary-600 dark:text-primary-400 mb-2">
-                        <a
-                          href={exp.companyUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:underline flex items-center space-x-1"
-                        >
+                        {exp.companyUrl ? (
+                          <a
+                            href={exp.companyUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:underline flex items-center space-x-1"
+                          >
+                            <span>{exp.company}</span>
+                            <ExternalLink size={14} />
+                          </a>
+                        ) : (
                           <span>{exp.company}</span>
-                          <ExternalLink size={14} />
-                        </a>
+                        )}
                       </div>
 
                       <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-4">
@@ -89,7 +95,7 @@ export const Experience = () => {
                       </p>
 
                       {/* Achievements Metrics */}
-                      {exp.achievements && (
+                      {exp.achievements && exp.achievements.length > 0 && (
                         <div className="grid grid-cols-2 gap-3 mb-4 p-3 rounded-xl bg-gray-50 dark:bg-gray-700/50">
                           {exp.achievements.map((ach, i) => (
                             <div key={i} className="text-center">
@@ -105,26 +111,30 @@ export const Experience = () => {
                       )}
 
                       {/* Responsibilities */}
-                      <div className="space-y-1.5 mb-5">
-                        {exp.responsibilities.map((resp, i) => (
-                          <div key={i} className="flex items-start space-x-2 text-xs text-gray-600 dark:text-gray-300">
-                            <CheckCircle size={14} className="text-green-500 flex-shrink-0 mt-0.5" />
-                            <span>{resp}</span>
-                          </div>
-                        ))}
-                      </div>
+                      {responsibilitiesList.length > 0 && (
+                        <div className="space-y-1.5 mb-5">
+                          {responsibilitiesList.map((resp, i) => (
+                            <div key={i} className="flex items-start space-x-2 text-xs text-gray-600 dark:text-gray-300">
+                              <CheckCircle size={14} className="text-green-500 flex-shrink-0 mt-0.5" />
+                              <span>{resp}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
 
                       {/* Tech Tags */}
-                      <div className="flex flex-wrap gap-1.5 pt-3 border-t border-gray-100 dark:border-gray-700">
-                        {exp.technologies.map((tech) => (
-                          <span
-                            key={tech}
-                            className="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded text-xs font-medium"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
+                      {techList.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 pt-3 border-t border-gray-100 dark:border-gray-700">
+                          {techList.map((tech) => (
+                            <span
+                              key={tech}
+                              className="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded text-xs font-medium"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 </div>

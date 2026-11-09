@@ -81,14 +81,14 @@ export const Contact = () => {
     {
       name: "GitHub",
       icon: <Github className="w-6 h-6" />,
-      url: portfolioData.personalInfo.github,
+      url: data.personalInfo?.github || "https://github.com/Afzaln22",
       color: "gray",
       description: "Check out my code repositories"
     },
     {
       name: "LinkedIn",
       icon: <Linkedin className="w-6 h-6" />,
-      url: portfolioData.personalInfo.linkedin,
+      url: data.personalInfo?.linkedin || "https://linkedin.com/in/afzal-n-87296b29",
       color: "blue",
       description: "Connect with me professionally"
     }

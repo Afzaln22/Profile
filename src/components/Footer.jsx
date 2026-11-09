@@ -38,7 +38,7 @@ export const Footer = ({ onOpenAdmin }) => {
               Quick Links
             </h4>
             <div className="grid grid-cols-2 gap-2 text-sm">
-              {navigation.map((item) => (
+              {(navigation || []).map((item) => (
                 <button
                   key={item.name}
                   onClick={() => scrollTo(item.href)}
