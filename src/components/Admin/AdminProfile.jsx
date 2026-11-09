@@ -249,3 +249,4 @@ export const AdminProfile = () => {
     </div>
   );
 };
+
