@@ -1,49 +1,34 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Server, Brain, Globe, Database, Cloud, Wrench } from 'lucide-react';
+import { Server, Brain, Globe, Database, Cloud, Wrench, Sparkles } from 'lucide-react';
+import { usePortfolio } from '../context/PortfolioContext';
 
 export const Skills = () => {
+  const { data } = usePortfolio();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, threshold: 0.1 });
 
-  const skillCategories = [
-    {
-      title: "Backend Development",
-      color: "blue",
-      icon: <Server className="w-6 h-6" />,
-      skills: ["Python 3.11+", "FastAPI", "RESTful APIs", "Microservices Architecture", "Node.js", "Express.js", "AsyncIO & Concurrency", "OOP Design"]
-    },
-    {
-      title: "AI, Vision & LLMs",
-      color: "purple",
-      icon: <Brain className="w-6 h-6" />,
-      skills: ["PyTorch", "Vision Transformers (ViT)", "YOLO Object Detection", "Grad-CAM (Explainable AI)", "LangGraph", "LangChain", "RAG Systems", "Scikit-Learn"]
-    },
-    {
-      title: "Frontend & Mobile",
-      color: "green",
-      icon: <Globe className="w-6 h-6" />,
-      skills: ["React.js 19", "Next.js 16 (App Router)", "Vite", "Tailwind CSS", "JavaScript (ES6+)", "Flutter & Dart", "Three.js / React Three Fiber", "Responsive Design"]
-    },
-    {
-      title: "Databases & Storage",
-      color: "orange",
-      icon: <Database className="w-6 h-6" />,
-      skills: ["PostgreSQL", "SQLite", "SQLAlchemy ORM", "Vector Databases", "Redis Caching", "MongoDB", "Data Normalization"]
-    },
-    {
-      title: "DevOps & Cloud",
-      color: "indigo",
-      icon: <Cloud className="w-6 h-6" />,
-      skills: ["Docker & Containers", "Git & GitHub Workflow", "Pytest Automated Suites", "Postman & API Testing", "Linux & Bash", "CI/CD Pipelines"]
-    },
-    {
-      title: "Engineering Practices",
-      color: "red",
-      icon: <Wrench className="w-6 h-6" />,
-      skills: ["Data Structures", "Algorithms", "System Architecture", "Performance Tuning", "Guardrails & Verification", "Agile / Scrum"]
-    }
-  ];
+  const getCategoryIcon = (name) => {
+    const lower = name.toLowerCase();
+    if (lower.includes('backend') || lower.includes('python')) return <Server className="w-6 h-6" />;
+    if (lower.includes('ai') || lower.includes('vision') || lower.includes('ml')) return <Brain className="w-6 h-6" />;
+    if (lower.includes('frontend') || lower.includes('web') || lower.includes('mobile')) return <Globe className="w-6 h-6" />;
+    if (lower.includes('database') || lower.includes('storage')) return <Database className="w-6 h-6" />;
+    if (lower.includes('cloud') || lower.includes('devops')) return <Cloud className="w-6 h-6" />;
+    return <Wrench className="w-6 h-6" />;
+  };
+
+  const getCategoryColor = (idx, name) => {
+    const palette = ['blue', 'purple', 'green', 'orange', 'indigo', 'red'];
+    return palette[idx % palette.length];
+  };
+
+  const skillCategories = (data.skillCategories || []).map((cat, idx) => ({
+    title: cat.name || cat.title || 'Skills',
+    color: cat.colorName || getCategoryColor(idx, cat.name || cat.title),
+    icon: getCategoryIcon(cat.name || cat.title),
+    skills: cat.skills || []
+  }));
 
   const getColorClasses = (color) => {
     const colorMap = {
@@ -134,18 +119,21 @@ export const Skills = () => {
 
                 {/* Skills Badges */}
                 <div className="flex flex-wrap gap-2">
-                  {category.skills.map((skill, skillIdx) => (
-                    <motion.span
-                      key={skill}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                      transition={{ duration: 0.4, delay: 0.1 * catIdx + 0.05 * skillIdx }}
-                      whileHover={{ scale: 1.05 }}
-                      className={`${styles.skill} px-3 py-2 rounded-lg text-sm font-medium cursor-default`}
-                    >
-                      {skill}
-                    </motion.span>
-                  ))}
+                  {category.skills.map((skill, skillIdx) => {
+                    const skillName = typeof skill === 'object' ? skill.name : skill;
+                    return (
+                      <motion.span
+                        key={skillName || skillIdx}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                        transition={{ duration: 0.4, delay: 0.1 * catIdx + 0.05 * skillIdx }}
+                        whileHover={{ scale: 1.05 }}
+                        className={`${styles.skill} px-3 py-2 rounded-lg text-sm font-medium cursor-default`}
+                      >
+                        {skillName}
+                      </motion.span>
+                    );
+                  })}
                 </div>
               </motion.div>
             );

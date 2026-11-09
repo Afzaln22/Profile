@@ -2,10 +2,11 @@ import React, { useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Mail, MapPin, Send, Github, Linkedin, ExternalLink, CheckCircle, AlertCircle } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { portfolioData } from '../data/portfolioData';
+import { usePortfolio } from '../context/PortfolioContext';
 
 export const Contact = () => {
-  const { contactInfo } = portfolioData;
+  const { data } = usePortfolio();
+  const contactInfo = data.contactInfo || { email: data.personalInfo?.email, location: data.personalInfo?.location };
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, threshold: 0.1 });
 

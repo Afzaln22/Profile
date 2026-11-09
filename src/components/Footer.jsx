@@ -1,10 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, ArrowUp } from 'lucide-react';
-import { portfolioData } from '../data/portfolioData';
+import { Github, Linkedin, Mail, ArrowUp, Lock } from 'lucide-react';
+import { usePortfolio } from '../context/PortfolioContext';
 
-export const Footer = () => {
-  const { personalInfo, navigation } = portfolioData;
+export const Footer = ({ onOpenAdmin }) => {
+  const { data } = usePortfolio();
+  const { personalInfo, navigation } = data;
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -107,8 +108,18 @@ export const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500 gap-2">
-          <p>© {new Date().getFullYear()} Afzal N. All rights reserved.</p>
-          <p>Built with React & Tailwind CSS</p>
+          <p>© {new Date().getFullYear()} {personalInfo.name || 'Afzal N'}. All rights reserved.</p>
+          <div className="flex items-center space-x-4">
+            <p>Built with React & Tailwind CSS</p>
+            <button
+              onClick={onOpenAdmin}
+              className="flex items-center space-x-1 text-gray-500 hover:text-primary-400 transition-colors py-1 px-2 rounded hover:bg-gray-800/80"
+              title="Admin CMS Portal"
+            >
+              <Lock size={12} />
+              <span>Admin</span>
+            </button>
+          </div>
         </div>
       </div>
     </footer>

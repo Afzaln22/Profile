@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { Github, ExternalLink, Calendar, CheckCircle, Filter, X, Code2 } from 'lucide-react';
-import { portfolioData } from '../data/portfolioData';
+import { usePortfolio } from '../context/PortfolioContext';
 
 export const Projects = () => {
-  const { projects } = portfolioData;
+  const { data } = usePortfolio();
+  const { projects } = data;
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, threshold: 0.1 });
 

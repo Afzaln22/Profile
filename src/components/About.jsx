@@ -1,10 +1,11 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { GraduationCap, Award, Terminal, Cpu, Database, Cloud } from 'lucide-react';
-import { portfolioData } from '../data/portfolioData';
+import { usePortfolio } from '../context/PortfolioContext';
 
 export const About = () => {
-  const { personalInfo, education } = portfolioData;
+  const { data } = usePortfolio();
+  const { personalInfo, education } = data;
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, threshold: 0.1 });
 

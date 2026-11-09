@@ -1,19 +1,20 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, ExternalLink, Github, Linkedin, Mail, ChevronDown, FileText } from 'lucide-react';
-import { portfolioData } from '../data/portfolioData';
+import { usePortfolio } from '../context/PortfolioContext';
 
 export const Hero = ({ onOpenResume }) => {
-  const { personalInfo } = portfolioData;
+  const { data } = usePortfolio();
+  const { personalInfo } = data;
 
   const roles = useMemo(
-    () => [
+    () => personalInfo.roles || [
       "Python Developer",
       "FastAPI & Backend Engineer",
       "AI / ML & Vision Specialist",
       "Full-Stack Developer"
     ],
-    []
+    [personalInfo.roles]
   );
 
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);

@@ -1,81 +1,13 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { MapPin, Calendar, ExternalLink, CheckCircle } from 'lucide-react';
-import { portfolioData } from '../data/portfolioData';
+import { usePortfolio } from '../context/PortfolioContext';
 
 export const Experience = () => {
+  const { data } = usePortfolio();
+  const experiences = data.experience || [];
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, threshold: 0.1 });
-
-  const experiences = [
-    {
-      id: 1,
-      company: "Independent Systems & Applied AI",
-      role: "Lead Full-Stack & AI Software Developer",
-      type: "Project Engineering",
-      location: "Mysore, Karnataka, India",
-      period: "2024 - Present",
-      duration: "Ongoing",
-      description: "Owning end-to-end development of Agentic AI solutions, quantitative algorithmic trading engines, and scalable backend microservices.",
-      responsibilities: [
-        "Architected AlgoForge: Engineered a stateful 4-stage LangGraph Agentic AI StateGraph with multi-cloud synthesis (AWS Bedrock / Azure OpenAI) and strict Pydantic hallucination guardrails.",
-        "Built DeepShield: Implemented a deepfake authenticity platform with PyTorch Vision Transformers (ViT), CNNs, Grad-CAM attention heatmaps, and a 3D Three.js forensic viewer.",
-        "Designed high-concurrency asynchronous REST APIs in FastAPI, PostgreSQL, and SQLite, maintaining sub-15ms telemetry dispatch and real-time WebSocket feeds.",
-        "Authored an automated Pytest verification suite achieving a 100% test pass rate across core graph routing and broker integration pipelines."
-      ],
-      technologies: ["Python 3.11", "FastAPI", "PyTorch", "LangGraph", "React 19", "Three.js", "Docker", "Pytest", "PostgreSQL"],
-      achievements: [
-        { metric: "9/9", description: "Automated Pytest tests passing" },
-        { metric: "<15ms", description: "WebSocket broker dispatch latency" }
-      ],
-      companyUrl: "https://github.com/Afzaln22",
-      current: true
-    },
-    {
-      id: 2,
-      company: "Master of Computer Applications (MCA)",
-      role: "Graduate Systems & Algorithm Researcher",
-      type: "Academic Engineering",
-      location: "Mysore, Karnataka, India",
-      period: "2024 - 2026",
-      duration: "2 Years",
-      description: "Advanced studies and applied implementations in distributed systems, computer vision models, and scalable database architectures.",
-      responsibilities: [
-        "Conducted in-depth practical research into Explainable AI (Grad-CAM) to visualize facial artifact heatmaps for synthetic media detection.",
-        "Engineered relational database models and normalized schemas using PostgreSQL, SQLite, and SQLAlchemy ORM.",
-        "Collaborated on modern cross-platform web and mobile architectures leveraging React, Next.js, and Flutter."
-      ],
-      technologies: ["Algorithms", "Deep Learning", "Distributed Systems", "SQLAlchemy", "PostgreSQL", "Flutter", "Git"],
-      achievements: [
-        { metric: "MCA", description: "Graduate Candidate standing" },
-        { metric: "100%", description: "Code test coverage on assignments" }
-      ],
-      companyUrl: "https://github.com/Afzaln22",
-      current: true
-    },
-    {
-      id: 3,
-      company: "Bachelor of Computer Applications (BCA)",
-      role: "Undergraduate Computer Applications Developer",
-      type: "Degree Program",
-      location: "Mysore, Karnataka, India",
-      period: "2021 - 2024",
-      duration: "3 Years",
-      description: "Graduated with honors, establishing core fundamentals in object-oriented programming, data structures, and full-stack software development.",
-      responsibilities: [
-        "Developed responsive web applications and strengthened full-stack programming skills through hands-on development projects.",
-        "Built database management systems adhering strictly to ACID principles and transactional integrity.",
-        "Participated actively in technical symposia and coding hackathons representing the institution."
-      ],
-      technologies: ["Python", "Java", "Data Structures", "Database Design", "Web Development", "OOP"],
-      achievements: [
-        { metric: "Honors", description: "Graduated with Distinction" },
-        { metric: "5+", description: "Software systems delivered" }
-      ],
-      companyUrl: "https://github.com/Afzaln22",
-      current: false
-    }
-  ];
 
   return (
     <section id="experience" className="section-padding bg-white dark:bg-gray-900">

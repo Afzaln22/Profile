@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, Moon, Menu, X, FileText } from 'lucide-react';
-import { portfolioData } from '../data/portfolioData';
+import { Sun, Moon, Menu, X, FileText, Settings } from 'lucide-react';
+import { usePortfolio } from '../context/PortfolioContext';
 
-export const Navbar = ({ darkMode, toggleDarkMode, onOpenResume }) => {
+export const Navbar = ({ darkMode, toggleDarkMode, onOpenResume, onOpenAdmin }) => {
+  const { data } = usePortfolio();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -43,12 +44,12 @@ export const Navbar = ({ darkMode, toggleDarkMode, onOpenResume }) => {
           }}
           className="text-2xl font-bold font-display gradient-text-primary"
         >
-          Afzal N
+          {data.personalInfo?.name || 'Afzal N'}
         </motion.a>
 
         {/* Desktop Navigation Links */}
         <div className="hidden md:flex items-center space-x-8">
-          {portfolioData.navigation.map((item) => (
+          {(data.navigation || []).map((item) => (
             <motion.button
               key={item.name}
               whileHover={{ scale: 1.05 }}
@@ -82,6 +83,19 @@ export const Navbar = ({ darkMode, toggleDarkMode, onOpenResume }) => {
             <FileText size={16} />
             <span>Resume</span>
           </motion.button>
+
+          {onOpenAdmin && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onOpenAdmin}
+              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200"
+              title="Admin CMS Portal"
+              aria-label="Admin Portal"
+            >
+              <Settings size={18} />
+            </motion.button>
+          )}
         </div>
 
         {/* Mobile Buttons */}
@@ -119,7 +133,7 @@ export const Navbar = ({ darkMode, toggleDarkMode, onOpenResume }) => {
             className="md:hidden overflow-hidden absolute top-full left-0 right-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg border-t border-gray-200 dark:border-gray-700"
           >
             <div className="py-4 space-y-2 px-6">
-              {portfolioData.navigation.map((item) => (
+              {(data.navigation || []).map((item) => (
                 <motion.button
                   key={item.name}
                   whileHover={{ x: 10 }}
@@ -129,7 +143,7 @@ export const Navbar = ({ darkMode, toggleDarkMode, onOpenResume }) => {
                   {item.name}
                 </motion.button>
               ))}
-              <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+              <div className="pt-2 border-t border-gray-200 dark:border-gray-700 space-y-2">
                 <button
                   onClick={() => {
                     setIsOpen(false);
@@ -140,6 +154,18 @@ export const Navbar = ({ darkMode, toggleDarkMode, onOpenResume }) => {
                   <FileText size={16} />
                   <span>View Full Resume</span>
                 </button>
+                {onOpenAdmin && (
+                  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      onOpenAdmin();
+                    }}
+                    className="w-full py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg font-medium text-sm flex items-center justify-center space-x-2 hover:bg-gray-200 dark:hover:bg-gray-700"
+                  >
+                    <Settings size={16} />
+                    <span>Admin CMS Portal</span>
+                  </button>
+                )}
               </div>
             </div>
           </motion.div>

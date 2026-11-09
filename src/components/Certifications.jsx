@@ -1,43 +1,13 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { BookOpen, ExternalLink, Users, Calendar, Award } from 'lucide-react';
+import { usePortfolio } from '../context/PortfolioContext';
 
 export const Certifications = () => {
+  const { data } = usePortfolio();
+  const publications = data.publicationsAndResearch || [];
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, threshold: 0.1 });
-
-  const publications = [
-    {
-      id: 1,
-      title: "Explainable Deep Learning in Multimedia Forensics: Real-Time Deepfake Detection using Vision Transformers & Grad-CAM",
-      authors: ["Afzal N", "Applied AI Research"],
-      journal: "Multimedia Security & Forensics",
-      conference: "Advanced Computer Applications Research",
-      year: "2025",
-      url: "https://github.com/Afzaln22",
-      abstract:
-        "This research explores real-time detection of synthetic facial manipulation by combining Vision Transformers (ViT) and Convolutional Neural Networks (CNN) with Gradient-weighted Class Activation Mapping (Grad-CAM). While deep learning models offer high classification accuracy, their lack of interpretability poses critical challenges in forensic verification. By generating spatial heatmaps that isolate manipulated pixels around facial boundaries, eyelids, and texture inconsistencies, this work enhances trust, reduces false-positive rates, and enables real-time stream analysis through an optimized FastAPI microservice pipeline.",
-      keywords: ["Deep Learning", "Vision Transformers", "Grad-CAM", "Explainable AI", "Deepfake Detection", "PyTorch", "Forensic Analytics"],
-      type: "Research Paper",
-      status: "Published",
-      impact: "Delivered interpretable forensic attention heatmaps isolating facial manipulation artifacts with sub-second inference."
-    },
-    {
-      id: 2,
-      title: "Agentic AI State Machines with LangGraph: Eliminating Hallucinations via Deterministic Pydantic Guardrails",
-      authors: ["Afzal N"],
-      journal: "Autonomous Systems Engineering",
-      conference: "Quantitative Systems & Agentic AI",
-      year: "2025",
-      url: "https://github.com/Afzaln22",
-      abstract:
-        "In quantitative finance and algorithmic execution, stochastic LLM outputs risk non-compliance and financial loss. This architecture introduces a 4-stage stateful execution loop utilizing LangGraph StateGraphs with deterministic Pydantic output validation. By separating intent routing, tool execution, LLM synthesis, and strict factual grounding against real-time Level-2 order book feeds, the system guarantees 100% compliance with risk management sizing rules and completely suppresses speculative hallucinations.",
-      keywords: ["LangGraph", "Agentic AI", "Pydantic AI", "StateGraph", "Algorithmic Trading", "Guardrails", "FastAPI"],
-      type: "Architecture Paper",
-      status: "Completed",
-      impact: "100% compliance with risk management guardrails across multi-cloud model deployments (Bedrock / Azure OpenAI)."
-    }
-  ];
 
   return (
     <section id="publications" className="section-padding bg-gray-50 dark:bg-gray-800">
