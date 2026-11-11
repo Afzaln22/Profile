@@ -206,7 +206,7 @@ export const Projects = () => {
           <motion.a
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            href={portfolioData.personalInfo.githubTab}
+            href={data.personalInfo?.githubTab || data.personalInfo?.github || "https://github.com/Afzaln22?tab=repositories"}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center space-x-2 px-8 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg font-medium shadow-md hover:shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-200"
